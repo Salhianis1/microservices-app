@@ -32,20 +32,6 @@ pipeline {
             }
         }
 
-        stage('Quality Gate (Non-blocking)') {
-            steps {
-                script {
-                    try {
-                        timeout(time: 5, unit: 'MINUTES') {
-                            def qualityGate = waitForQualityGate()
-                            echo "Quality Gate status: ${qualityGate.status}"
-                        }
-                    } catch (err) {
-                        echo "Quality Gate check skipped or failed: ${err}"
-                    }
-                }
-            }
-        }
 
         stage('Build and Push Images') {
             steps {
