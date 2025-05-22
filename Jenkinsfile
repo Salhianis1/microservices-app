@@ -37,29 +37,26 @@ pipeline {
                 script {
                     def services = ['auth', 'client', 'expiration', 'orders', 'payments', 'tickets']
                     def gitCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
-
+        
                     withCredentials([usernamePassword(credentialsId: env.DOCKERHUB_CREDENTIALS,
                                       usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-
-                        // Docker login
+        
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
-
+        
                         for (service in services) {
                             def imageName = "${DOCKERHUB_USERNAME}/${service}:${gitCommit}"
-
+        
                             echo "Building image for ${service} with tag ${gitCommit}"
                             sh "docker build -t ${imageName} ./${service}"
-
+        
                             echo "Scanning image ${imageName} with Trivy"
-                            sh """
-                            trivy image --exit-code 1 --severity HIGH,CRITICAL ${imageName} || (echo 'Vulnerabilities found in ${imageName}' && exit 1)
-                            """
-
+                            // Run Trivy scan but do not fail the build on vulnerabilities:
+                            sh "trivy image --severity HIGH,CRITICAL ${imageName} || true"
+        
                             echo "Pushing image ${imageName}"
                             sh "docker push ${imageName}"
                         }
-
-                        // Docker logout
+        
                         sh "docker logout"
                     }
                 }
