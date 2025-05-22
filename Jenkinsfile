@@ -5,7 +5,7 @@ pipeline {
         DOCKERHUB_CREDENTIALS = 'dockerhub-id'   // Jenkins credentials ID for DockerHub
         DOCKERHUB_USERNAME = 'salhianis20'
         SONARQUBE_ENV = 'SonarQube'
-        SONAR_PROJECT_KEY = 'MERN-App'
+        SONAR_PROJECT_KEY = 'Microservices-App'
     }
 
     stages {
