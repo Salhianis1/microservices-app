@@ -36,7 +36,6 @@ pipeline {
             steps {
                 script {
                     def services = ['auth', 'client', 'expiration', 'orders', 'payments', 'tickets']
-                    def gitCommit = sh(script: 'git rev-parse --short HEAD', returnStdout: true).trim()
         
                     withCredentials([usernamePassword(credentialsId: env.DOCKERHUB_CREDENTIALS,
                                       usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
