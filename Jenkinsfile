@@ -44,9 +44,9 @@ pipeline {
                         sh "echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin"
         
                         for (service in services) {
-                            def imageName = "${DOCKERHUB_USERNAME}/${service}:${gitCommit}"
+                            def imageName = "${DOCKERHUB_USERNAME}/${service}:latest"
         
-                            echo "Building image for ${service} with tag ${gitCommit}"
+                            echo "Building image for ${service} with tag latest"
                             sh "docker build -t ${imageName} ./${service}"
         
                             echo "Scanning image ${imageName} with Trivy"
